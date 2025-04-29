@@ -1,9 +1,9 @@
 # Projeto de Frameworks
 
 ## Academicos
-Fernando Camilo Schneider
-Jean Carlo Toral
-João Ulisses Porto Alegre Ciriaco Teixeira
+- Fernando Camilo Schneider
+- Jean Carlo Toral
+- João Ulisses Porto Alegre Ciriaco Teixeira
 
 ## Projetos
 
