@@ -33,6 +33,8 @@ $routes->get('/', 'Home::index');
 
 // Rotas para Tasks
 $routes->get('tasks', 'Tasks::index');
+$routes->get('tasks/create', 'TaskController::create');
+$routes->post('tasks/store', 'TaskController::store');
 
 /*
  * --------------------------------------------------------------------

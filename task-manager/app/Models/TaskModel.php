@@ -11,15 +11,12 @@ class TaskModel extends Model
     
     protected $useAutoIncrement = true;
     protected $returnType = 'array';
-    
-    protected $useSoftDeletes = true;
-    protected $deletedField = 'deleted_at';
+
     
     protected $allowedFields = ['name', 'description', 'completed', 'deleted'];
-    
-    protected $useTimestamps = true;
+        
+    protected $useTimestamps = false;
     protected $createdField = 'created_at';
-    protected $updatedField = 'updated_at';
     
     protected $validationRules = [
         'name' => 'required|min_length[3]|max_length[100]',

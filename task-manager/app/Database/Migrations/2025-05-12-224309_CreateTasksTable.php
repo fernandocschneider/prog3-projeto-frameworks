@@ -38,14 +38,6 @@ class CreateTasksTable extends Migration
                 'type' => 'TIMESTAMP',
                 'null' => true,
             ],
-            'updated_at' => [
-                'type' => 'TIMESTAMP',
-                'null' => true,
-            ],
-            'deleted_at' => [
-                'type' => 'TIMESTAMP',
-                'null' => true,
-            ],
         ]);
         
         $this->forge->addKey('id', true);

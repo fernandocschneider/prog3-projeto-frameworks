@@ -25,7 +25,7 @@ Configurando o Ambiente
 Verifique se o Docker Desktop está instalado e rodando na sua máquina.
 Execute o Docker Compose para criar os contêineres:
 
-bashdocker-compose up -d
+docker-compose up -d
 Este comando irá:
 
 Criar um contêiner para o PostgreSQL 17
@@ -34,17 +34,16 @@ Configurar a rede entre os contêineres
 
 Entre no contêiner da aplicação para instalar as dependências:
 
-bashdocker exec -it taskmanager-app bash
+docker exec -it taskmanager-app bash
 composer install
 
 Execute as migrações para criar as tabelas no banco de dados:
 
-bashphp spark migrate
-Acessando a Aplicação
-Após a configuração, a aplicação estará disponível em:
-http://localhost:8080
+docker exec -it taskmanager-app php spark migrate
+
 Para visualizar a lista de tarefas, acesse:
-http://localhost:8080/tasks
+http://localhost:8081/tasks
+
 Conexão com o Banco de Dados (DBeaver)
 Para conectar ao banco de dados usando o DBeaver:
 
@@ -58,4 +57,4 @@ Username: postgres
 Password: postgres
 
 
--- Anotação (JEAN): docker exec -it taskmanager-app php spark serve
+-- Anotação (JEAN): docker exec -it taskmanager-app php spark migrate:refresh
