@@ -6,26 +6,19 @@
 - Jean Carlo Toral
 - João Ulisses Porto Alegre Ciriaco Teixeira
 
-## Projetos
-
 ### Task List
 
 Aplicação para gerenciamento de tarefas, permitindo ao usuário cadastrar, visualizar, editar, excluir e marcar tarefas como concluídas ou pendentes. Ideal para organizar compromissos e atividades diárias.
 
-### Controle de filmes assistidos
+### Executando a aplicação
 
-Sistema para registrar filmes assistidos pelo usuário, com informações como título, ano, gênero, nota e comentários. Permite edição, exclusão, filtro por critérios específicos e marcação de favoritos.
-
-### Configuração Inicial
-Clonando o Repositório
-bashgit clone [URL-DO-REPOSITÓRIO]
-cd [NOME-DA-PASTA]
-Configurando o Ambiente
+Primeiramente, é preciso criar um arquivo .env no root da aplicação.
+O arquivo .env.example possui um modelo pronto com as configurações base.
 
 Verifique se o Docker Desktop está instalado e rodando na sua máquina.
 Execute o Docker Compose para criar os contêineres:
 
-docker-compose up -d
+    docker-compose up -d
 
 Entre no contêiner da aplicação para instalar as dependências:
 
@@ -38,6 +31,8 @@ Execute as migrações para criar as tabelas no banco de dados:
 
 Para visualizar a lista de tarefas, acesse:
 http://localhost:8081/tasks
+
+### Para conectar no banco de dados
 
 Abra o DBeaver e crie uma nova conexão PostgreSQL
 Configure os seguintes parâmetros:
