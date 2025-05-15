@@ -26,35 +26,24 @@ Verifique se o Docker Desktop está instalado e rodando na sua máquina.
 Execute o Docker Compose para criar os contêineres:
 
 docker-compose up -d
-Este comando irá:
-
-Criar um contêiner para o PostgreSQL 17
-Criar um contêiner para a aplicação PHP com Apache
-Configurar a rede entre os contêineres
 
 Entre no contêiner da aplicação para instalar as dependências:
 
-docker exec -it taskmanager-app bash
-composer install
+    docker exec -it taskmanager-app bash
+    composer install
 
 Execute as migrações para criar as tabelas no banco de dados:
 
-docker exec -it taskmanager-app php spark migrate
+    docker exec -it taskmanager-app php spark migrate
 
 Para visualizar a lista de tarefas, acesse:
 http://localhost:8081/tasks
 
-Conexão com o Banco de Dados (DBeaver)
-Para conectar ao banco de dados usando o DBeaver:
-
 Abra o DBeaver e crie uma nova conexão PostgreSQL
 Configure os seguintes parâmetros:
 
-Host: localhost
-Port: 5433 (porta mapeada no docker-compose)
-Database: taskmanager
-Username: postgres
-Password: postgres
-
-
--- Anotação (JEAN): docker exec -it taskmanager-app php spark migrate:refresh
+    Host: localhost ou 127.0.0.1
+    Port: 5434 (porta mapeada no docker-compose)
+    Database: taskmanager
+    Username: postgres
+    Password: postgres
