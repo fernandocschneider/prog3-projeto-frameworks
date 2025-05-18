@@ -1,7 +1,7 @@
 <?php
 
 namespace App\Controllers;
-
+helper('url');
 use CodeIgniter\Controller;
 use CodeIgniter\HTTP\CLIRequest;
 use CodeIgniter\HTTP\IncomingRequest;

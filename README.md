@@ -12,7 +12,7 @@ Aplicação para gerenciamento de tarefas, permitindo ao usuário cadastrar, vis
 
 ### Executando a aplicação
 
-Primeiramente, é preciso criar um arquivo .env no root da aplicação.
+Primeiramente, é preciso criar um arquivo .env no root da aplicação.    
 O arquivo .env.example possui um modelo pronto com as configurações base.
 
 Verifique se o Docker Desktop está instalado e rodando na sua máquina.
