@@ -33,16 +33,7 @@ class Toolbar extends BaseConfig
      *
      * @var list<class-string>
      */
-    public array $collectors = [
-        Timers::class,
-        Database::class,
-        Logs::class,
-        Views::class,
-        // \CodeIgniter\Debug\Toolbar\Collectors\Cache::class,
-        Files::class,
-        Routes::class,
-        Events::class,
-    ];
+    public array $collectors = [];
 
     /**
      * --------------------------------------------------------------------------
@@ -52,7 +43,12 @@ class Toolbar extends BaseConfig
      * If set to false var data from the views will not be collected. Useful to
      * avoid high memory usage when there are lots of data passed to the view.
      */
-    public bool $collectVarData = true;
+    public $collectVarData = true;
+
+    public function shouldCollect(): bool
+    {
+        return !(service('request')->isAJAX());
+    }
 
     /**
      * --------------------------------------------------------------------------
@@ -117,6 +113,12 @@ class Toolbar extends BaseConfig
      * @var list<string>
      */
     public array $watchedExtensions = [
-        'php', 'css', 'js', 'html', 'svg', 'json', 'env',
+        'php',
+        'css',
+        'js',
+        'html',
+        'svg',
+        'json',
+        'env',
     ];
 }

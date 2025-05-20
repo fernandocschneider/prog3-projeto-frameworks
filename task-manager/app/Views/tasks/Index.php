@@ -151,86 +151,85 @@
             text-decoration: none;
         }
 
-        /* Modal styles */
         .modal-overlay {
-        position: fixed;
-        top: 0;
-        left: 0;
-        width: 100vw;
-        height: 100vh;
-        background-color: rgba(0, 0, 0, 0.5);
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        z-index: 1000;
-    }
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            background-color: rgba(0, 0, 0, 0.5);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+        }
 
-    .modal-content {
-        background-color: white;
-        padding: 2.5rem 2rem;
-        border-radius: 16px;
-        width: 100%;
-        max-width: 500px;
-        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        gap: 1.25rem;
-        font-family: "Segoe UI", sans-serif;
-    }
+        .modal-content {
+            background-color: white;
+            padding: 2.5rem 2rem;
+            border-radius: 16px;
+            width: 100%;
+            max-width: 500px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 1.25rem;
+            font-family: "Segoe UI", sans-serif;
+        }
 
-    .modal-content h2 {
-        margin-top: 0;
-        color: #5a3d78;
-        font-size: 1.6rem;
-        text-align: center;
-    }
+        .modal-content h2 {
+            margin-top: 0;
+            color: #5a3d78;
+            font-size: 1.6rem;
+            text-align: center;
+        }
 
-    .modal-content label {
-        align-self: flex-start;
-        font-weight: 600;
-        margin-bottom: -0.5rem;
-        color: #5a3d78;
-        font-size: 0.95rem;
-    }
+        .modal-content label {
+            align-self: flex-start;
+            font-weight: 600;
+            margin-bottom: -0.5rem;
+            color: #5a3d78;
+            font-size: 0.95rem;
+        }
 
-    .modal-content input,
-    .modal-content textarea {
-        width: 100%;
-        padding: 0.9rem 1rem;
-        border: 1px solid #d3c1f3;
-        border-radius: 10px;
-        font-size: 1rem;
-        font-family: inherit;
-        background-color: #f9f5ff;
-        box-shadow: inset 0 1px 2px rgba(90, 61, 120, 0.05);
-        transition: border-color 0.3s ease, box-shadow 0.3s ease;
-        resize: none; /* <- remove o redimensionamento */
-        box-sizing: border-box;
-    }
+        .modal-content input,
+        .modal-content textarea {
+            width: 100%;
+            padding: 0.9rem 1rem;
+            border: 1px solid #d3c1f3;
+            border-radius: 10px;
+            font-size: 1rem;
+            font-family: inherit;
+            background-color: #f9f5ff;
+            box-shadow: inset 0 1px 2px rgba(90, 61, 120, 0.05);
+            transition: border-color 0.3s ease, box-shadow 0.3s ease;
+            resize: none;
+            box-sizing: border-box;
+        }
 
-    .modal-content input:focus,
-    .modal-content textarea:focus {
-        border-color: #a78bfa;
-        outline: none;
-        box-shadow: 0 0 0 3px rgba(167, 139, 250, 0.3);
-        background-color: #fff;
-    }
+        .modal-content input:focus,
+        .modal-content textarea:focus {
+            border-color: #a78bfa;
+            outline: none;
+            box-shadow: 0 0 0 3px rgba(167, 139, 250, 0.3);
+            background-color: #fff;
+        }
 
-    .modal-buttons {
-        display: flex;
-        justify-content: center;
-        gap: 1rem;
-        margin-top: 1rem;
-    }
+        .modal-buttons {
+            display: flex;
+            justify-content: center;
+            gap: 1rem;
+            margin-top: 1rem;
+        }
 
-    .modal-buttons .btn {
-        padding: 0.75rem 1.8rem;
-        font-size: 1rem;
-        border-radius: 8px;
-        font-weight: 500;
-        min-width: 110px;
-    }
+        .modal-buttons .btn {
+            padding: 0.75rem 1.8rem;
+            font-size: 1rem;
+            border-radius: 8px;
+            font-weight: 500;
+            min-width: 110px;
+        }
     </style>
 </head>
 
@@ -239,69 +238,175 @@
     <div class="container">
         <h1><?= esc($title) ?></h1>
 
-        <?php if (!empty($tasks) && count($tasks) > 0): ?>
-            <div class="task-header">
-                <div></div>
-                <div>Nome</div>
-                <div>Descrição</div>
-                <div></div>
-            </div>
-            <?php foreach ($tasks as $task): ?>
-                <div class="task-item">
-                    <input type="checkbox" class="task-checkbox" <?= $task['completed'] ? 'checked' : '' ?> disabled>
-                    <div class="task-name"><?= esc($task['name']) ?></div>
-                    <div class="task-description"><?= esc($task['description']) ?></div>
-                    <button class="delete-btn" title="Excluir tarefa">✕</button>
+        <div id="task-list">
+            <?php if (!empty($tasks) && count($tasks) > 0): ?>
+                <div class="task-header">
+                    <div></div>
+                    <div>Nome</div>
+                    <div>Descrição</div>
+                    <div></div>
                 </div>
-            <?php endforeach; ?>
-        <?php else: ?>
-            <div class="empty-message">
-                Nenhuma tarefa encontrada.
-            </div>
-        <?php endif; ?>
+                <?php foreach ($tasks as $task): ?>
+                    <div class="task-item">
+                        <input type="checkbox" class="task-checkbox" <?= $task['completed'] ? 'checked' : '' ?> disabled>
+                        <div class="task-name"><?= esc($task['name']) ?></div>
+                        <div class="task-description"><?= esc($task['description']) ?></div>
+                        <button class="delete-btn" data-id="<?= esc($task['id']) ?>">✕</button>
+                    </div>
+                <?php endforeach; ?>
+            <?php else: ?>
+                <div class="empty-message">Nenhuma tarefa encontrada.</div>
+            <?php endif; ?>
+        </div>
 
         <div class="footer-buttons">
             <button class="btn" onclick="openModal()">+ Adicionar Tarefa</button>
-            <a href="/">
-                <button class="btn">Voltar para Início</button>
-            </a>
+            <a href="/"><button class="btn">Voltar para Início</button></a>
         </div>
-    </div>
 
-    <!-- Modal -->
-    <div id="taskModal" class="modal-overlay" style="display: none;">
-        <div class="modal-content">
-            <h2>Nova Tarefa</h2>
-            <label for="taskName">Nome</label>
-            <input type="text" id="taskName" placeholder="Digite o nome da tarefa">
-
-            <label for="taskDescription">Descrição</label>
-            <textarea id="taskDescription" rows="4" placeholder="Digite a descrição"></textarea>
-
-            <div class="modal-buttons">
-                <button class="btn" onclick="closeModal()">Cancelar</button>
-                <button class="btn">Salvar</button>
+        <div id="taskModal" class="modal-overlay" style="display: none;">
+            <div class="modal-content">
+                <h2>Nova Tarefa</h2>
+                <form id="addTaskForm">
+                    <label for="taskName">Nome</label>
+                    <input type="text" id="taskName" name="name" placeholder="Digite o nome da tarefa" required>
+                    <label for="taskDescription">Descrição</label>
+                    <textarea id="taskDescription" name="description" rows="4" placeholder="Digite a descrição" required></textarea>
+                    <div class="modal-buttons">
+                        <button type="button" class="btn" onclick="closeModal()">Cancelar</button>
+                        <button type="submit" class="btn">Salvar</button>
+                    </div>
+                </form>
             </div>
         </div>
-    </div>
 
-    <script>
-        function openModal() {
-            document.getElementById("taskModal").style.display = "flex";
-        }
+        <div id="confirmDeleteModal" class="modal-overlay" style="display: none;">
+            <div class="modal-content">
+                <h2>Confirmar Exclusão</h2>
+                <p>Tem certeza que deseja excluir esta tarefa?</p>
+                <div class="modal-buttons">
+                    <button class="btn" onclick="closeDeleteModal()">Cancelar</button>
+                    <button class="btn" onclick="confirmDelete()">Excluir</button>
+                </div>
+            </div>
+        </div>
 
-        function closeModal() {
-            document.getElementById("taskModal").style.display = "none";
-        }
+        <script>
+            let taskToDelete = null;
 
-        // Fecha modal ao clicar fora do conteúdo
-        window.addEventListener("click", function (event) {
-            const modal = document.getElementById("taskModal");
-            if (event.target === modal) {
-                closeModal();
+            function openModal() {
+                document.getElementById("taskModal").style.display = "flex";
             }
-        });
-    </script>
+
+            function closeModal() {
+                document.getElementById("taskModal").style.display = "none";
+                document.getElementById("addTaskForm").reset();
+            }
+
+            function openDeleteModal() {
+                document.getElementById("confirmDeleteModal").style.display = "flex";
+            }
+
+            function closeDeleteModal() {
+                document.getElementById("confirmDeleteModal").style.display = "none";
+                taskToDelete = null;
+            }
+
+            function attachDeleteListeners() {
+                document.querySelectorAll('.delete-btn').forEach((btn) => {
+                    btn.addEventListener('click', function() {
+                        taskToDelete = this.getAttribute('data-id');
+                        openDeleteModal();
+                    });
+                });
+            }
+
+            function confirmDelete() {
+                if (!taskToDelete) return;
+
+                fetch(`/tasks/delete/${taskToDelete}`, {
+                        method: 'DELETE',
+                        headers: {
+                            'X-Requested-With': 'XMLHttpRequest'
+                        }
+                    })
+                    .then(response => {
+                        if (response.ok) {
+                            return fetch('/tasks/list', {
+                                headers: {
+                                    'X-Requested-With': 'XMLHttpRequest'
+                                }
+                            });
+                        } else {
+                            throw new Error('Erro ao excluir a tarefa');
+                        }
+                    })
+                    .then(res => res.text())
+                    .then(html => {
+                        document.getElementById('task-list').innerHTML = html;
+                        attachDeleteListeners();
+                    })
+                    .catch(error => {
+                        console.error('Erro:', error);
+                        alert('Erro ao excluir a tarefa.');
+                    });
+
+                closeDeleteModal();
+            }
+
+            document.addEventListener('DOMContentLoaded', function() {
+                attachDeleteListeners();
+
+                document.getElementById('addTaskForm').addEventListener('submit', function(e) {
+                    e.preventDefault();
+
+                    const formData = new FormData(this);
+
+                    fetch('/tasks/add', {
+                            method: 'POST',
+                            body: formData,
+                            headers: {
+                                'X-Requested-With': 'XMLHttpRequest'
+                            }
+                        })
+                        .then(response => {
+                            if (response.ok) {
+                                return fetch('/tasks/list', {
+                                    headers: {
+                                        'X-Requested-With': 'XMLHttpRequest'
+                                    }
+                                });
+                            } else {
+                                throw new Error('Erro ao adicionar a tarefa');
+                            }
+                        })
+                        .then(res => res.text())
+                        .then(html => {
+                            // Atualiza apenas o conteúdo do task-list
+                            document.getElementById('task-list').innerHTML = html;
+                            attachDeleteListeners();
+                            closeModal();
+                        })
+                        .catch(error => {
+                            console.error('Erro:', error);
+                            alert('Erro ao adicionar a tarefa.');
+                        });
+                });
+
+                window.addEventListener("click", function(event) {
+                    const taskModal = document.getElementById("taskModal");
+                    const deleteModal = document.getElementById("confirmDeleteModal");
+
+                    if (event.target === taskModal) {
+                        closeModal();
+                    }
+
+                    if (event.target === deleteModal) {
+                        closeDeleteModal();
+                    }
+                });
+            });
+        </script>
 
 </body>
 
