@@ -49,4 +49,27 @@ class Tasks extends BaseController
         $this->taskModel->insert($data);
         return $this->response->setStatusCode(200);
     }
+    // Dentro da classe Tasks no arquivo app/Controllers/Tasks.php
+
+    public function toggle($id)
+    {
+        // Pega o status enviado pelo JavaScript (true ou false)
+        $data = $this->request->getJSON();
+        $isCompleted = $data->completed;
+
+        // Carrega o Model
+        $model = new \App\Models\TaskModel();
+
+        // Tenta atualizar o banco de dados
+        $updated = $model->update($id, [
+            'completed' => $isCompleted
+        ]);
+
+        // Verifica se a atualização foi bem-sucedida
+        if ($updated) {
+            return $this->response->setJSON(['status' => 'success']);
+        } else {
+            return $this->response->setStatusCode(500)->setJSON(['status' => 'error']);
+        }
+    }
 }
