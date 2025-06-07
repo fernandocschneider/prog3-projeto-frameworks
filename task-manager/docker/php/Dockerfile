@@ -10,6 +10,8 @@ RUN apt-get update && apt-get install -y \
     git \
     && docker-php-ext-install intl pdo pdo_pgsql pgsql zip
 
+RUN docker-php-ext-install opcache
+
 # Configurar o Apache para utilizar o diretório público
 ENV APACHE_DOCUMENT_ROOT /var/www/html/public
 

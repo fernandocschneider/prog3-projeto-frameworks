@@ -43,7 +43,7 @@ class Toolbar extends BaseConfig
      * If set to false var data from the views will not be collected. Useful to
      * avoid high memory usage when there are lots of data passed to the view.
      */
-    public $collectVarData = true;
+    public $collectVarData = false;
 
     public function shouldCollect(): bool
     {

@@ -45,8 +45,11 @@ class Tasks extends BaseController
             'description' => $description,
             'completed' => false
         ];
+        var_dump($data);
 
         $this->taskModel->insert($data);
+
+        var_dump($this->taskModel->errors());
         return $this->response->setStatusCode(200);
     }
     // Dentro da classe Tasks no arquivo app/Controllers/Tasks.php
