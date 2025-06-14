@@ -13,7 +13,7 @@ class TaskModel extends Model
     protected $returnType = 'array';
 
 
-    protected $allowedFields = ['name', 'description', 'completed', 'deleted'];
+    protected $allowedFields = ['name', 'description', 'completed', 'deleted', 'created_at'];
 
     protected $useTimestamps = false;
     protected $createdField = 'created_at';

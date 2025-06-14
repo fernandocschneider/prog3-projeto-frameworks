@@ -27,14 +27,16 @@ $routes->set404Override();
  * --------------------------------------------------------------------
  */
 
-// We get a performance increase by specifying the default
-// route since we don't have to scan directories.
+// Página inicial
 $routes->get('/', 'Home::index');
+
+// Rotas para Tasks
 $routes->get('tasks', 'Tasks::index');
-$routes->delete('/tasks/delete/(:num)', 'Tasks::delete/$1');
 $routes->get('tasks/list', 'Tasks::list');
 $routes->post('tasks/add', 'Tasks::add');
-
+$routes->delete('tasks/delete/(:num)', 'Tasks::delete/$1');
+$routes->put('tasks/complete/(:num)', 'Tasks::complete/$1');
+$routes->put('tasks/uncomplete/(:num)', 'Tasks::uncomplete/$1');
 
 /*
  * --------------------------------------------------------------------

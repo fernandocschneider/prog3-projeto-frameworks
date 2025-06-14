@@ -95,9 +95,9 @@
 
         .task-header {
             display: grid;
-            grid-template-columns: auto 1fr 1fr auto;
-            gap: 1rem;
-            padding: 0 1rem;
+            grid-template-columns: 30px 1fr 2fr 1fr 30px;
+            font-weight: bold;
+            padding: 0.5rem;
             margin-bottom: 0.5rem;
             font-weight: 600;
             color: var(--color-text-muted);
@@ -108,10 +108,10 @@
 
         .task-item {
             display: grid;
-            grid-template-columns: auto 1fr 1fr auto;
+            grid-template-columns: 30px 1fr 2fr 1fr 30px;
             align-items: center;
-            gap: 1rem;
-            padding: 1rem;
+            gap: 0.5rem;
+            padding: 0.5rem;
             border-bottom: 1px solid var(--color-border);
             transition: background-color 0.2s ease-in-out;
         }
@@ -333,6 +333,11 @@
             gap: 1rem;
             margin-top: 2rem;
         }
+
+        .task-created {
+            font-size: 0.75rem;
+            color: var(--color-text-muted);
+        }
     </style>
 </head>
 
@@ -347,6 +352,7 @@
                     <div></div>
                     <div>Nome</div>
                     <div>Descrição</div>
+                    <div>Criada em</div>
                     <div></div>
                 </div>
                 <?php foreach ($tasks as $task): ?>
@@ -354,6 +360,7 @@
                         <input type="checkbox" class="task-checkbox" data-id="<?= esc($task['id']) ?>" <?= $task['completed'] ? 'checked' : '' ?>>
                         <div class="task-name"><?= esc($task['name']) ?></div>
                         <div class="task-description"><?= esc($task['description']) ?></div>
+                        <div class="task-created"><?= date('d/m/Y H:i', strtotime($task['created_at'])) ?></div>
                         <button class="delete-btn" data-id="<?= esc($task['id']) ?>">
                             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
                                 <path stroke-linecap="round" stroke-linejoin="round" d="M14.74 9l-.346 9m-4.788 0L9.26 9m9.968-3.21c.342.052.682.107 1.022.166m-1.022-.165L18.16 19.673a2.25 2.25 0 01-2.244 2.077H8.084a2.25 2.25 0 01-2.244-2.077L4.772 5.79m14.456 0a48.108 48.108 0 00-3.478-.397m-12 .562c.34-.059.68-.114 1.022-.165m0 0a48.11 48.11 0 013.478-.397m7.5 0v-.916c0-1.18-.91-2.134-2.09-2.201a51.964 51.964 0 00-3.32 0c-1.18.067-2.09 1.022-2.09 2.201v.916m7.5 0a48.667 48.667 0 00-7.5 0" />
