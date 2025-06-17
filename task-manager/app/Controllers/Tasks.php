@@ -31,8 +31,15 @@ class Tasks extends BaseController
 
     public function delete($id = null)
     {
-        $this->taskModel->delete($id);
-        return $this->response->setStatusCode(200);
+        $db = \Config\Database::connect();
+        $sql = "UPDATE tasks SET deleted = true WHERE id = ?";
+        $updated = $db->query($sql, [$id]);
+
+        if ($updated) {
+            return $this->response->setStatusCode(200);
+        } else {
+            return $this->response->setStatusCode(500)->setJSON(['status' => 'error', 'message' => 'Erro ao marcar tarefa como deletada']);
+        }
     }
 
     public function add()
@@ -43,7 +50,8 @@ class Tasks extends BaseController
         $data = [
             'name' => $name,
             'description' => $description,
-            'completed' => false
+            'completed' => false,
+            'created_at' => date('Y-m-d H:i:s')
         ];
         var_dump($data);
 
@@ -54,25 +62,30 @@ class Tasks extends BaseController
     }
     // Dentro da classe Tasks no arquivo app/Controllers/Tasks.php
 
-    public function toggle($id)
+    public function toggle()
     {
         // Pega o status enviado pelo JavaScript (true ou false)
         $data = $this->request->getJSON();
-        $isCompleted = $data->completed;
+        $isCompleted = (bool) $data->completed;
+        $id = $data->id;
 
         // Carrega o Model
         $model = new \App\Models\TaskModel();
+        $db = \Config\Database::connect();
 
-        // Tenta atualizar o banco de dados
-        $updated = $model->update($id, [
-            'completed' => $isCompleted
-        ]);
+        // Tenta atualizar o banco de dados com uma query SQL direta
+        $sql = "UPDATE tasks SET completed = ? WHERE id = ?";
+        $updated = $db->query($sql, [$isCompleted, $id]);
 
         // Verifica se a atualização foi bem-sucedida
         if ($updated) {
-            return $this->response->setJSON(['status' => 'success']);
+            return $this->response->setStatusCode(200)->setJSON(['status' => 'success']);
         } else {
-            return $this->response->setStatusCode(500)->setJSON(['status' => 'error']);
+            return $this->response->setStatusCode(500)->setJSON([
+                'status' => 'error',
+                'completed' => $isCompleted,
+                'message' => 'Erro ao atualizar a tarefa'
+            ]);
         }
     }
 }

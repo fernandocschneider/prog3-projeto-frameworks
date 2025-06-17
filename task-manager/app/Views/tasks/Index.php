@@ -356,14 +356,17 @@
                     <div></div>
                 </div>
                 <?php foreach ($tasks as $task): ?>
-                    <div class="task-item <?= $task['completed'] ? 'task-item--completed' : '' ?>">
-                        <input type="checkbox" class="task-checkbox" data-id="<?= esc($task['id']) ?>" <?= $task['completed'] ? 'checked' : '' ?>>
+                    <div class="task-item <?= $task['completed'] == 't' ? 'task-item--completed' : '' ?>">
+                        <input type="checkbox" class="task-checkbox" data-id="<?= esc($task['id']) ?>"
+                            <?= $task['completed'] == 't' ? 'checked' : '' ?>>
                         <div class="task-name"><?= esc($task['name']) ?></div>
                         <div class="task-description"><?= esc($task['description']) ?></div>
                         <div class="task-created"><?= date('d/m/Y H:i', strtotime($task['created_at'])) ?></div>
                         <button class="delete-btn" data-id="<?= esc($task['id']) ?>">
-                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
-                                <path stroke-linecap="round" stroke-linejoin="round" d="M14.74 9l-.346 9m-4.788 0L9.26 9m9.968-3.21c.342.052.682.107 1.022.166m-1.022-.165L18.16 19.673a2.25 2.25 0 01-2.244 2.077H8.084a2.25 2.25 0 01-2.244-2.077L4.772 5.79m14.456 0a48.108 48.108 0 00-3.478-.397m-12 .562c.34-.059.68-.114 1.022-.165m0 0a48.11 48.11 0 013.478-.397m7.5 0v-.916c0-1.18-.91-2.134-2.09-2.201a51.964 51.964 0 00-3.32 0c-1.18.067-2.09 1.022-2.09 2.201v.916m7.5 0a48.667 48.667 0 00-7.5 0" />
+                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
+                                stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round"
+                                    d="M14.74 9l-.346 9m-4.788 0L9.26 9m9.968-3.21c.342.052.682.107 1.022.166m-1.022-.165L18.16 19.673a2.25 2.25 0 01-2.244 2.077H8.084a2.25 2.25 0 01-2.244-2.077L4.772 5.79m14.456 0a48.108 48.108 0 00-3.478-.397m-12 .562c.34-.059.68-.114 1.022-.165m0 0a48.11 48.11 0 013.478-.397m7.5 0v-.916c0-1.18-.91-2.134-2.09-2.201a51.964 51.964 0 00-3.32 0c-1.18.067-2.09 1.022-2.09 2.201v.916m7.5 0a48.667 48.667 0 00-7.5 0" />
                             </svg>
                         </button>
                     </div>
@@ -376,7 +379,8 @@
         <div class="footer-buttons">
             <a href="/" class="btn btn-secondary">Voltar para Início</a>
             <button class="btn btn-primary" onclick="openModal()">
-                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" style="width: 20px; height: 20px;">
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2"
+                    stroke="currentColor" style="width: 20px; height: 20px;">
                     <path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15" />
                 </svg>
                 Adicionar Tarefa
@@ -394,7 +398,8 @@
                 </div>
                 <div class="form-group">
                     <label for="taskDescription">Descrição</label>
-                    <textarea id="taskDescription" name="description" rows="3" placeholder="Ex: Ver tutoriais e praticar com um projeto" required></textarea>
+                    <textarea id="taskDescription" name="description" rows="3"
+                        placeholder="Ex: Ver tutoriais e praticar com um projeto" required></textarea>
                 </div>
                 <div class="modal-buttons">
                     <button type="button" class="btn btn-secondary" onclick="closeModal()">Cancelar</button>
@@ -437,7 +442,7 @@
 
         function attachDeleteListeners() {
             document.querySelectorAll('.delete-btn').forEach((btn) => {
-                btn.addEventListener('click', function() {
+                btn.addEventListener('click', function () {
                     taskToDelete = this.getAttribute('data-id');
                     openDeleteModal();
                 });
@@ -448,11 +453,11 @@
             if (!taskToDelete) return;
 
             fetch(`/tasks/delete/${taskToDelete}`, {
-                    method: 'DELETE',
-                    headers: {
-                        'X-Requested-With': 'XMLHttpRequest'
-                    }
-                })
+                method: 'DELETE',
+                headers: {
+                    'X-Requested-With': 'XMLHttpRequest'
+                }
+            })
                 .then(response => {
                     if (response.ok) {
                         return fetch('/tasks/list', {
@@ -468,6 +473,7 @@
                 .then(html => {
                     document.getElementById('task-list').innerHTML = html;
                     attachDeleteListeners();
+                    attachCheckboxListeners();
                 })
                 .catch(error => {
                     console.error('Erro:', error);
@@ -477,20 +483,61 @@
             closeDeleteModal();
         }
 
-        document.addEventListener('DOMContentLoaded', function() {
-            attachDeleteListeners();
+        function attachCheckboxListeners() {
+            document.querySelectorAll('.task-checkbox').forEach(checkbox => {
+                checkbox.addEventListener('change', function (e) {
+                    const checkbox = e.target;
+                    const taskId = checkbox.dataset.id;
+                    const isCompleted = checkbox.checked;
+                    const taskItem = checkbox.closest('.task-item');
 
-            document.getElementById('addTaskForm').addEventListener('submit', function(e) {
+                    // Feedback visual imediato
+                    taskItem.classList.toggle('task-item--completed', isCompleted);
+
+                    // Envia a atualização para o servidor
+                    fetch(`/tasks/toggle`, {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'X-Requested-With': 'XMLHttpRequest'
+                        },
+                        body: JSON.stringify({
+                            id: taskId,
+                            completed: isCompleted
+                        })
+                    })
+                        .then(response => {
+                            if (!response.ok) {
+                                alert('Erro ao atualizar a tarefa.');
+                                taskItem.classList.toggle('task-item--completed', !isCompleted);
+                                checkbox.checked = !isCompleted;
+                            }
+                        })
+                        .catch(error => {
+                            console.error("Erro no fetch:", error);
+                            alert('Erro ao conectar com o servidor.');
+                            taskItem.classList.toggle('task-item--completed', !isCompleted);
+                            checkbox.checked = !isCompleted;
+                        });
+                });
+            });
+        }
+
+        document.addEventListener('DOMContentLoaded', function () {
+            attachDeleteListeners();
+            attachCheckboxListeners();
+
+            document.getElementById('addTaskForm').addEventListener('submit', function (e) {
                 e.preventDefault();
                 const formData = new FormData(this);
 
                 fetch('/tasks/add', {
-                        method: 'POST',
-                        body: formData,
-                        headers: {
-                            'X-Requested-With': 'XMLHttpRequest'
-                        }
-                    })
+                    method: 'POST',
+                    body: formData,
+                    headers: {
+                        'X-Requested-With': 'XMLHttpRequest'
+                    }
+                })
                     .then(response => {
                         if (response.ok) {
                             return fetch('/tasks/list', {
@@ -506,65 +553,69 @@
                     .then(html => {
                         document.getElementById('task-list').innerHTML = html;
                         attachDeleteListeners();
+                        attachCheckboxListeners();
                         closeModal();
                     })
                     .catch(error => {
                         console.error('Erro:', error);
                         alert('Erro ao adicionar a tarefa.');
                     });
-                // Cole este novo bloco DENTRO do 'DOMContentLoaded'
-
-                document.getElementById('task-list').addEventListener('change', function(e) {
-                    if (e.target.matches('.task-checkbox')) {
-                        const checkbox = e.target;
-                        const taskId = checkbox.dataset.id;
-                        const isCompleted = checkbox.checked;
-                        const taskItem = checkbox.closest('.task-item');
-
-                        // Feedback visual imediato
-                        taskItem.classList.toggle('task-item--completed', isCompleted);
-
-                        // Envia a atualização para o servidor
-                        fetch(`/tasks/toggle/${taskId}`, {
-                                method: 'POST',
-                                headers: {
-                                    'Content-Type': 'application/json',
-                                    'X-Requested-With': 'XMLHttpRequest'
-                                },
-                                body: JSON.stringify({
-                                    completed: isCompleted
-                                })
-                            })
-                            .then(response => {
-                                if (!response.ok) {
-                                    // Se der erro, desfaz a alteração visual
-                                    alert('Erro ao atualizar a tarefa.');
-                                    taskItem.classList.toggle('task-item--completed', !isCompleted);
-                                    checkbox.checked = !isCompleted;
-                                }
-                                // Não é preciso fazer nada em caso de sucesso, pois a UI já foi atualizada
-                            })
-                            .catch(error => {
-                                console.error("Erro no fetch:", error);
-                                alert('Erro ao conectar com o servidor.');
-                                taskItem.classList.toggle('task-item--completed', !isCompleted);
-                                checkbox.checked = !isCompleted;
-                            });
-                    }
-                });
-            });
-
-            window.addEventListener("click", function(event) {
-                const taskModal = document.getElementById("taskModal");
-                const deleteModal = document.getElementById("confirmDeleteModal");
-                if (event.target === taskModal) {
-                    closeModal();
-                }
-                if (event.target === deleteModal) {
-                    closeDeleteModal();
-                }
             });
         });
+
+        document.addEventListener('DOMContentLoaded', () => {
+            const checkboxes = document.querySelectorAll('.task-checkbox');
+
+            checkboxes.forEach(checkbox => {
+                checkbox.addEventListener('change', function (e) {
+                    const checkbox = e.target;
+                    const taskId = checkbox.dataset.id;
+                    const isCompleted = checkbox.checked;
+                    const taskItem = checkbox.closest('.task-item');
+
+                    taskItem.classList.toggle('task-item--completed', isCompleted);
+
+                    fetch(`/tasks/toggle`, {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'X-Requested-With': 'XMLHttpRequest'
+                        },
+                        body: JSON.stringify({
+                            id: taskId,
+                            completed: isCompleted
+                        })
+                    })
+                        .then(response => {
+                            console.log('Resposta do servidor:', response);
+                            if (!response.ok) {
+                                // Se der erro, desfaz a alteração visual
+                                alert('Erro ao atualizar a tarefa.');
+                                taskItem.classList.toggle('task-item--completed', !isCompleted);
+                                checkbox.checked = !isCompleted;
+                            }
+                            // Não é preciso fazer nada em caso de sucesso, pois a UI já foi atualizada
+                        })
+                        .catch(error => {
+                            console.error("Erro no fetch:", error);
+                            alert('Erro ao conectar com o servidor.');
+                            taskItem.classList.toggle('task-item--completed', !isCompleted);
+                            checkbox.checked = !isCompleted;
+                        });
+
+                    window.addEventListener("click", function (event) {
+                        const taskModal = document.getElementById("taskModal");
+                        const deleteModal = document.getElementById("confirmDeleteModal");
+                        if (event.target === taskModal) {
+                            closeModal();
+                        }
+                        if (event.target === deleteModal) {
+                            closeDeleteModal();
+                        }
+                    });
+                })
+            })
+        })
     </script>
 </body>
 

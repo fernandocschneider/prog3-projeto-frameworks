@@ -37,6 +37,7 @@ $routes->post('tasks/add', 'Tasks::add');
 $routes->delete('tasks/delete/(:num)', 'Tasks::delete/$1');
 $routes->put('tasks/complete/(:num)', 'Tasks::complete/$1');
 $routes->put('tasks/uncomplete/(:num)', 'Tasks::uncomplete/$1');
+$routes->post('tasks/toggle', 'Tasks::toggle');
 
 /*
  * --------------------------------------------------------------------
