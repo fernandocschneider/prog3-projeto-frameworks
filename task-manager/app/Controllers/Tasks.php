@@ -23,6 +23,7 @@ class Tasks extends BaseController
 
         return view('tasks/index', $data);
     }
+
     public function list()
     {
         $tasks = $this->taskModel->findAll();
@@ -32,11 +33,10 @@ class Tasks extends BaseController
     public function delete($id = null)
     {
         $db = \Config\Database::connect();
-        $sql = "UPDATE tasks SET deleted = true WHERE id = ?";
+        $sql = "UPDATE tasks SET deleted = 't' WHERE id = ?";
         $updated = $db->query($sql, [$id]);
 
         if ($updated) {
-            $this->taskModel->clearCache();
             return $this->response->setStatusCode(200);
         } else {
             return $this->response->setStatusCode(500)->setJSON(['status' => 'error', 'message' => 'Erro ao marcar tarefa como deletada']);
@@ -48,14 +48,9 @@ class Tasks extends BaseController
         $name = $this->request->getPost('name');
         $description = $this->request->getPost('description');
 
-        $data = [
-            'name' => $name,
-            'description' => $description,
-            'completed' => false,
-            'created_at' => date('Y-m-d H:i:s')
-        ];
-
-        $result = $this->taskModel->insert($data);
+        $db = \Config\Database::connect();
+        $sql = "INSERT INTO tasks (name, description, completed, created_at) VALUES (?, ?, 'f', ?)";
+        $result = $db->query($sql, [$name, $description, date('Y-m-d H:i:s')]);
 
         if ($result) {
             return $this->response->setStatusCode(200);
@@ -71,11 +66,11 @@ class Tasks extends BaseController
         $id = $data->id;
 
         $db = \Config\Database::connect();
+        $completedValue = $isCompleted ? 't' : 'f';
         $sql = "UPDATE tasks SET completed = ? WHERE id = ?";
-        $updated = $db->query($sql, [$isCompleted, $id]);
+        $updated = $db->query($sql, [$completedValue, $id]);
 
         if ($updated) {
-            $this->taskModel->clearCache();
             return $this->response->setStatusCode(200)->setJSON(['status' => 'success']);
         } else {
             return $this->response->setStatusCode(500)->setJSON([

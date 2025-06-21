@@ -24,25 +24,3 @@
 <?php else: ?>
     <div class="empty-message">Nenhuma tarefa encontrada. Adicione uma nova!</div>
 <?php endif; ?>
-
-<script>
-    function atualizarListaTarefas() {
-        fetch('/tasks/list', {
-            headers: {
-                'X-Requested-With': 'XMLHttpRequest'
-            }
-        })
-            .then(res => res.text())
-            .then(html => {
-                document.getElementById('task-list').innerHTML = html;
-                attachDeleteListeners();
-                attachCheckboxListeners();
-                closeModal();
-            });
-    }
-
-    document.addEventListener('DOMContentLoaded', function () {
-        attachDeleteListeners();
-        attachCheckboxListeners();
-    });
-</script>

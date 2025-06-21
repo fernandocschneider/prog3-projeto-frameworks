@@ -47,18 +47,23 @@ function confirmDelete() {
             throw new Error('Erro ao excluir a tarefa');
         }
     })
-    .then(res => res.text())
+    .then(res => {
+        if (!res.ok) {
+            throw new Error('Erro ao carregar a lista atualizada');
+        }
+        return res.text();
+    })
     .then(html => {
         document.getElementById('task-list').innerHTML = html;
         attachDeleteListeners();
         attachCheckboxListeners();
+        closeDeleteModal();
     })
     .catch(error => {
         console.error('Erro:', error);
         alert('Erro ao excluir a tarefa.');
+        closeDeleteModal();
     });
-
-    closeDeleteModal();
 }
 
 function attachCheckboxListeners() {
@@ -129,7 +134,12 @@ document.addEventListener('DOMContentLoaded', function () {
                 throw new Error('Erro ao adicionar a tarefa');
             }
         })
-        .then(res => res.text())
+        .then(res => {
+            if (!res.ok) {
+                throw new Error('Erro ao carregar a lista atualizada');
+            }
+            return res.text();
+        })
         .then(html => {
             document.getElementById('task-list').innerHTML = html;
             attachDeleteListeners();

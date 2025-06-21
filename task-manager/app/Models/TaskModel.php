@@ -20,53 +20,31 @@ class TaskModel extends Model
     protected $validationRules = [
         'name' => 'required|min_length[3]|max_length[100]',
         'description' => 'permit_empty',
-        'completed' => 'permit_empty|boolean',
-        'deleted' => 'permit_empty|in_list[0,1]',
+        'completed' => 'permit_empty|in_list[t,f]',
+        'deleted' => 'permit_empty|in_list[t,f]',
     ];
 
     protected $useSoftDeletes = false;
 
     public function findAll(?int $limit = null, int $offset = 0)
     {
-        $cacheKey = "tasks_all_{$limit}_{$offset}";
-        $cache = \Config\Services::cache();
-        
-        $cached = $cache->get($cacheKey);
-        if ($cached !== null) {
-            return $cached;
-        }
-
         $db = \Config\Database::connect();
-        $sql = "SELECT * FROM tasks WHERE deleted = false ORDER BY id DESC";
+        $sql = "SELECT * FROM tasks WHERE deleted = 'f' OR deleted IS NULL ORDER BY id DESC";
         if ($limit !== null) {
             $sql .= " LIMIT ? OFFSET ?";
             $result = $db->query($sql, [$limit, $offset])->getResultArray();
         } else {
             $result = $db->query($sql)->getResultArray();
         }
-
-        $cache->save($cacheKey, $result, 300);
         
         return $result;
     }
 
     public function findById($id)
     {
-        $cacheKey = "task_{$id}";
-        $cache = \Config\Services::cache();
-        
-        $cached = $cache->get($cacheKey);
-        if ($cached !== null) {
-            return $cached;
-        }
-
         $db = \Config\Database::connect();
-        $sql = "SELECT * FROM tasks WHERE id = ? AND deleted = false";
+        $sql = "SELECT * FROM tasks WHERE id = ? AND (deleted = 'f' OR deleted IS NULL)";
         $result = $db->query($sql, [$id])->getRowArray();
-
-        if ($result) {
-            $cache->save($cacheKey, $result, 300);
-        }
         
         return $result;
     }
@@ -74,28 +52,12 @@ class TaskModel extends Model
     public function insert($data = null, bool $returnID = true)
     {
         $result = parent::insert($data, $returnID);
-        
-        $this->clearCache();
-        
         return $result;
     }
 
     public function update($id = null, $data = null): bool
     {
         $result = parent::update($id, $data);
-        
-        $this->clearCache();
-        
         return $result;
-    }
-
-    private function clearCache()
-    {
-        $cache = \Config\Services::cache();
-        $cache->delete('tasks_all');
-        $cache->delete('tasks_all_');
-        for ($i = 1; $i <= 100; $i++) {
-            $cache->delete("task_{$i}");
-        }
     }
 }
