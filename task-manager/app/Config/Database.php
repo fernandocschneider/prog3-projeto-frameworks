@@ -33,7 +33,7 @@ class Database extends Config
         'DBDriver' => 'Postgre',
         'DBPrefix' => '',
         'pConnect' => false,
-        'DBDebug'  => true,
+        'DBDebug'  => false,
         'charset'  => 'utf8',
         'DBCollat' => 'utf8_general_ci',
         'swapPre'  => '',
@@ -41,8 +41,14 @@ class Database extends Config
         'compress' => false,
         'strictOn' => false,
         'failover' => [],
-        'port'     => 5432, // Container's internal port is still 5432
+        'port'     => 5432,
         'schema'   => 'public',
+        'cache_on' => true,
+        'cachedir' => WRITEPATH . 'cache/db/',
+        'char_set' => 'utf8',
+        'dbcollat' => 'utf8_general_ci',
+        'cache_autodel' => true,
+        'cache_default_expire' => 300,
     ];
 
     public function __construct()

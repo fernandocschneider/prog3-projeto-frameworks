@@ -36,6 +36,7 @@ class Tasks extends BaseController
         $updated = $db->query($sql, [$id]);
 
         if ($updated) {
+            $this->taskModel->clearCache();
             return $this->response->setStatusCode(200);
         } else {
             return $this->response->setStatusCode(500)->setJSON(['status' => 'error', 'message' => 'Erro ao marcar tarefa como deletada']);
@@ -53,32 +54,28 @@ class Tasks extends BaseController
             'completed' => false,
             'created_at' => date('Y-m-d H:i:s')
         ];
-        var_dump($data);
 
-        $this->taskModel->insert($data);
+        $result = $this->taskModel->insert($data);
 
-        var_dump($this->taskModel->errors());
-        return $this->response->setStatusCode(200);
+        if ($result) {
+            return $this->response->setStatusCode(200);
+        } else {
+            return $this->response->setStatusCode(500)->setJSON(['status' => 'error', 'message' => 'Erro ao adicionar tarefa']);
+        }
     }
-    // Dentro da classe Tasks no arquivo app/Controllers/Tasks.php
 
     public function toggle()
     {
-        // Pega o status enviado pelo JavaScript (true ou false)
         $data = $this->request->getJSON();
         $isCompleted = (bool) $data->completed;
         $id = $data->id;
 
-        // Carrega o Model
-        $model = new \App\Models\TaskModel();
         $db = \Config\Database::connect();
-
-        // Tenta atualizar o banco de dados com uma query SQL direta
         $sql = "UPDATE tasks SET completed = ? WHERE id = ?";
         $updated = $db->query($sql, [$isCompleted, $id]);
 
-        // Verifica se a atualização foi bem-sucedida
         if ($updated) {
+            $this->taskModel->clearCache();
             return $this->response->setStatusCode(200)->setJSON(['status' => 'success']);
         } else {
             return $this->response->setStatusCode(500)->setJSON([
