@@ -42,3 +42,7 @@ Configure os seguintes parâmetros:
     Database: taskmanager
     Username: postgres
     Password: postgres
+
+### Para executar os testes automatizados pelo PHPUnit
+
+    vendor\bin\phpunit --testdox
