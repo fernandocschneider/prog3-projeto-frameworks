@@ -1,0 +1,1 @@
+O teste consiste em marcar as checkboxes como True e como False, depois é testado a exclusão da tarefa e por fim é criado uma nova tarefa, assim finalizando o teste.
