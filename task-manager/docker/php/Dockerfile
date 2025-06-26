@@ -12,6 +12,11 @@ RUN apt-get update && apt-get install -y \
 
 RUN docker-php-ext-install opcache
 
+# Criar diretórios necessários e definir permissões
+RUN mkdir -p /var/www/html/writable/{cache,logs,session,uploads} \
+    && chmod -R 755 /var/www/html/writable/ \
+    && chown -R www-data:www-data /var/www/html/writable/
+
 # Configurar o Apache para utilizar o diretório público
 ENV APACHE_DOCUMENT_ROOT /var/www/html/public
 
