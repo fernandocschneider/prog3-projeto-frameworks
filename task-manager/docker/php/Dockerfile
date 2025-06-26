@@ -12,14 +12,10 @@ RUN apt-get update && apt-get install -y \
 
 RUN docker-php-ext-install opcache
 
-# Criar diretórios necessários e definir permissões
-RUN mkdir -p /var/www/html/writable/{cache,logs,session,uploads} \
-    && chmod -R 755 /var/www/html/writable/ \
-    && chown -R www-data:www-data /var/www/html/writable/
-
 # Configurar o Apache para utilizar o diretório público
 ENV APACHE_DOCUMENT_ROOT /var/www/html/public
 
+# Ajustar configurações do Apache (como root)
 RUN sed -ri -e 's!/var/www/html!${APACHE_DOCUMENT_ROOT}!g' /etc/apache2/sites-available/*.conf
 RUN sed -ri -e 's!/var/www/!${APACHE_DOCUMENT_ROOT}!g' /etc/apache2/apache2.conf /etc/apache2/conf-available/*.conf
 
@@ -30,3 +26,9 @@ RUN a2enmod rewrite
 COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
 
 WORKDIR /var/www/html
+
+# Garante que a pasta writable/cache exista e tenha permissão de escrita
+RUN mkdir -p writable/cache && chown -R www-data:www-data writable
+
+# Só agora muda para o usuário www-data
+USER www-data
