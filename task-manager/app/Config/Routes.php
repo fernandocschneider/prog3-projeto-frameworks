@@ -30,6 +30,13 @@ $routes->set404Override();
 // Página inicial
 $routes->get('/', 'Home::index');
 
+// Rotas de Autenticação
+$routes->get('auth', 'Auth::index');
+$routes->post('auth/login', 'Auth::login');
+$routes->get('auth/logout', 'Auth::logout');
+$routes->get('auth/register', 'Auth::register');
+$routes->post('auth/create', 'Auth::create');
+
 // Rotas para Tasks
 $routes->get('tasks', 'Tasks::index');
 $routes->get('tasks/list', 'Tasks::list');

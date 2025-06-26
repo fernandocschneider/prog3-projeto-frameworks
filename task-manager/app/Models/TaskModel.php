@@ -12,7 +12,7 @@ class TaskModel extends Model
     protected $useAutoIncrement = true;
     protected $returnType = 'array';
 
-    protected $allowedFields = ['name', 'description', 'completed', 'deleted', 'created_at'];
+    protected $allowedFields = ['name', 'description', 'completed', 'deleted', 'created_at', 'user_id'];
 
     protected $useTimestamps = false;
     protected $createdField = 'created_at';
@@ -22,29 +22,48 @@ class TaskModel extends Model
         'description' => 'permit_empty',
         'completed' => 'permit_empty|in_list[t,f]',
         'deleted' => 'permit_empty|in_list[t,f]',
+        'user_id' => 'required|integer',
     ];
 
     protected $useSoftDeletes = false;
 
-    public function findAll(?int $limit = null, int $offset = 0)
+    public function findAll(?int $limit = null, int $offset = 0, $userId = null)
     {
         $db = \Config\Database::connect();
-        $sql = "SELECT * FROM tasks WHERE deleted = 'f' OR deleted IS NULL ORDER BY id DESC";
+        $sql = "SELECT * FROM tasks WHERE (deleted = 'f' OR deleted IS NULL)";
+        
+        $params = [];
+        if ($userId !== null) {
+            $sql .= " AND user_id = ?";
+            $params[] = $userId;
+        }
+        
+        $sql .= " ORDER BY id DESC";
+        
         if ($limit !== null) {
             $sql .= " LIMIT ? OFFSET ?";
-            $result = $db->query($sql, [$limit, $offset])->getResultArray();
+            $params[] = $limit;
+            $params[] = $offset;
+            $result = $db->query($sql, $params)->getResultArray();
         } else {
-            $result = $db->query($sql)->getResultArray();
+            $result = $db->query($sql, $params)->getResultArray();
         }
         
         return $result;
     }
 
-    public function findById($id)
+    public function findById($id, $userId = null)
     {
         $db = \Config\Database::connect();
         $sql = "SELECT * FROM tasks WHERE id = ? AND (deleted = 'f' OR deleted IS NULL)";
-        $result = $db->query($sql, [$id])->getRowArray();
+        $params = [$id];
+        
+        if ($userId !== null) {
+            $sql .= " AND user_id = ?";
+            $params[] = $userId;
+        }
+        
+        $result = $db->query($sql, $params)->getRowArray();
         
         return $result;
     }
@@ -59,5 +78,10 @@ class TaskModel extends Model
     {
         $result = parent::update($id, $data);
         return $result;
+    }
+
+    public function getTasksByUser($userId)
+    {
+        return $this->findAll(null, 0, $userId);
     }
 }

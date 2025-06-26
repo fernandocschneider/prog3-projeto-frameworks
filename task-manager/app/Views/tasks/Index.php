@@ -14,11 +14,93 @@
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
     
     <link rel="stylesheet" href="/assets/css/style.css">
+    <style>
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+            padding: 20px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border-radius: 15px;
+            color: white;
+        }
+
+        .user-info {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .user-avatar {
+            width: 50px;
+            height: 50px;
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            font-weight: 600;
+        }
+
+        .user-details h3 {
+            margin: 0;
+            font-size: 1.2rem;
+            font-weight: 600;
+        }
+
+        .user-details p {
+            margin: 5px 0 0 0;
+            opacity: 0.8;
+            font-size: 0.9rem;
+        }
+
+        .logout-btn {
+            background: rgba(255, 255, 255, 0.2);
+            color: white;
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            padding: 10px 20px;
+            border-radius: 8px;
+            text-decoration: none;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+
+        .logout-btn:hover {
+            background: rgba(255, 255, 255, 0.3);
+            border-color: rgba(255, 255, 255, 0.5);
+            transform: translateY(-2px);
+        }
+
+        .page-title {
+            margin: 0;
+            font-size: 2rem;
+            font-weight: 700;
+            color: white;
+        }
+    </style>
 </head>
 
 <body>
     <div class="container">
-        <h1><?= esc($title ?? 'Lista de Tarefas') ?></h1>
+        <div class="header">
+            <div class="user-info">
+                <div class="user-avatar">
+                    <?= strtoupper(substr($user['nome'] ?? 'U', 0, 1)) ?>
+                </div>
+                <div class="user-details">
+                    <h3><?= esc($user['nome'] ?? 'Usuário') ?></h3>
+                    <p><?= esc($user['email'] ?? '') ?></p>
+                </div>
+            </div>
+            <div>
+                <h1 class="page-title"><?= esc($title ?? 'Lista de Tarefas') ?></h1>
+            </div>
+            <div>
+                <a href="/auth/logout" class="logout-btn">Sair</a>
+            </div>
+        </div>
 
         <div id="task-list">
             <?php if (!empty($tasks)): ?>
