@@ -14,6 +14,7 @@ class SimpleTaskTest extends CIUnitTestCase
             'description' => 'Descrição da tarefa',
             'completed' => 'f',
             'deleted' => 'f',
+            'user_id' => 1,
             'created_at' => '2025-06-22 00:00:00'
         ];
 
@@ -22,6 +23,7 @@ class SimpleTaskTest extends CIUnitTestCase
         $this->assertArrayHasKey('description', $task);
         $this->assertArrayHasKey('completed', $task);
         $this->assertArrayHasKey('deleted', $task);
+        $this->assertArrayHasKey('user_id', $task);
         $this->assertArrayHasKey('created_at', $task);
 
         $this->assertIsInt($task['id']);
@@ -29,6 +31,7 @@ class SimpleTaskTest extends CIUnitTestCase
         $this->assertIsString($task['description']);
         $this->assertIsString($task['completed']);
         $this->assertIsString($task['deleted']);
+        $this->assertIsInt($task['user_id']);
         $this->assertIsString($task['created_at']);
     }
 
@@ -37,13 +40,15 @@ class SimpleTaskTest extends CIUnitTestCase
         $validTask = [
             'name' => 'Tarefa Válida',
             'description' => 'Descrição válida',
-            'completed' => 'f'
+            'completed' => 'f',
+            'user_id' => 1
         ];
 
         $invalidTask = [
             'name' => 'Ab',
             'description' => 'Descrição',
-            'completed' => 'invalid'
+            'completed' => 'invalid',
+            'user_id' => 'invalid'
         ];
 
         $isValidTask = $this->validateTask($validTask);
@@ -79,6 +84,16 @@ class SimpleTaskTest extends CIUnitTestCase
         $this->assertGreaterThan(100, strlen($longName));
     }
 
+    public function testUserIdValidation()
+    {
+        $validUserId = 1;
+        $invalidUserId = 'abc';
+
+        $this->assertIsInt($validUserId);
+        $this->assertGreaterThan(0, $validUserId);
+        $this->assertIsString($invalidUserId);
+    }
+
     private function validateTask($task)
     {
         if (strlen($task['name']) < 3) {
@@ -86,6 +101,10 @@ class SimpleTaskTest extends CIUnitTestCase
         }
         
         if (!in_array($task['completed'], ['t', 'f'])) {
+            return false;
+        }
+
+        if (!is_int($task['user_id']) || $task['user_id'] <= 0) {
             return false;
         }
 

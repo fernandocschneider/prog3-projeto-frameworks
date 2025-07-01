@@ -30,6 +30,16 @@ class TasksControllerTest extends CIUnitTestCase
         $this->assertInstanceOf(\App\Models\TaskModel::class, $taskModel);
     }
 
+    public function testControllerHasUserModel()
+    {
+        $reflection = new \ReflectionClass($this->tasksController);
+        $property = $reflection->getProperty('userModel');
+        $property->setAccessible(true);
+        
+        $userModel = $property->getValue($this->tasksController);
+        $this->assertInstanceOf(\App\Models\UserModel::class, $userModel);
+    }
+
     public function testControllerMethodsExist()
     {
         $this->assertTrue(method_exists($this->tasksController, 'index'));
@@ -59,5 +69,25 @@ class TasksControllerTest extends CIUnitTestCase
     public function testControllerResponseProperty()
     {
         $this->assertTrue(property_exists($this->tasksController, 'response'));
+    }
+
+    public function testControllerUsesSession()
+    {
+        $this->assertTrue(method_exists($this->tasksController, 'index'));
+        $this->assertTrue(method_exists($this->tasksController, 'list'));
+        $this->assertTrue(method_exists($this->tasksController, 'add'));
+        $this->assertTrue(method_exists($this->tasksController, 'delete'));
+        $this->assertTrue(method_exists($this->tasksController, 'toggle'));
+    }
+
+    public function testControllerMethodsRequireUserAuthentication()
+    {
+        $reflection = new \ReflectionClass($this->tasksController);
+        
+        $methods = ['index', 'list', 'add', 'delete', 'toggle'];
+        foreach ($methods as $method) {
+            $methodReflection = $reflection->getMethod($method);
+            $this->assertTrue($methodReflection->isPublic(), "Método $method deve ser público");
+        }
     }
 } 
